@@ -1,4 +1,4 @@
-# demo-xa
+# Distributed Transactions
 
 A minimal Spring Boot 4 application that demonstrates **distributed (XA) transactions** across two heterogeneous resource managers:
 
