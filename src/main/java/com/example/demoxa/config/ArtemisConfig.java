@@ -35,20 +35,27 @@ public class ArtemisConfig {
     @Value("${spring.artemis.password}")
     private String password;
 
+    @Value("${jms.provider}")
+    private String jmsProvider;
+
     @Bean(initMethod = "init", destroyMethod = "close")
     @DependsOn("atomikosTransactionManager")
     @Primary
     public ConnectionFactory connectionFactory() {
 
-        ActiveMQXAConnectionFactory xaFactory =
-                new ActiveMQXAConnectionFactory(
-                        brokerUrl, user, password);
+        if("artemis".equals(jmsProvider)){
+            ActiveMQXAConnectionFactory xaFactory =
+                    new ActiveMQXAConnectionFactory(
+                            brokerUrl, user, password);
 
-        AtomikosConnectionFactoryBean bean = new AtomikosConnectionFactoryBean();
-        bean.setUniqueResourceName("artemis-xa");
-        bean.setXaConnectionFactory(xaFactory);
-        bean.setMaxPoolSize(10);
-        return bean;
+            AtomikosConnectionFactoryBean bean = new AtomikosConnectionFactoryBean();
+            bean.setUniqueResourceName("artemis-xa");
+            bean.setXaConnectionFactory(xaFactory);
+            bean.setMaxPoolSize(10);
+            return bean;
+        }
+        throw new IllegalStateException("Unsupported JMS provider: " + jmsProvider);
+
     }
 
     @Bean

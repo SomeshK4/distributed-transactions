@@ -27,24 +27,32 @@ public class XaDatasourceConfig {
     @Value("${spring.datasource.password}")
     private String password;
 
+    @Value("${database.provider}")
+    private String databaseProvider;
+
     @Bean(initMethod = "init", destroyMethod = "close")
     @DependsOn("atomikosTransactionManager")
     @Primary
     public DataSource dataSource() {
 
-        PGXADataSource xa = new PGXADataSource();
-        xa.setUrl(url);
-        xa.setUser(username);
-        xa.setPassword(password);
+        if(databaseProvider.equalsIgnoreCase("postgresql")){
+            PGXADataSource xa = new PGXADataSource();
+            xa.setUrl(url);
+            xa.setUser(username);
+            xa.setPassword(password);
 
-        AtomikosDataSourceBean ds = new AtomikosDataSourceBean();
-        ds.setUniqueResourceName("postgres-xa");
-        ds.setXaDataSource(xa);
-        ds.setMinPoolSize(1);
-        ds.setMaxPoolSize(10);
-        ds.setBorrowConnectionTimeout(30);
-        ds.setTestQuery("SELECT 1");
-        return ds;
+            AtomikosDataSourceBean ds = new AtomikosDataSourceBean();
+            ds.setUniqueResourceName("postgresql-xa");
+            ds.setXaDataSource(xa);
+            ds.setMinPoolSize(1);
+            ds.setMaxPoolSize(10);
+            ds.setBorrowConnectionTimeout(30);
+            ds.setTestQuery("SELECT 1");
+            return ds;
+        }
+
+
+        throw new IllegalArgumentException("Unsupported database provider: " + databaseProvider);
     }
 }
 

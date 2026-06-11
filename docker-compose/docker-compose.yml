@@ -24,3 +24,25 @@ services:
     ports:
       - "61616:61616"
       - "8161:8161"
+
+  ibmmq:
+    image: icr.io/ibm-messaging/mq:latest
+    container_name: ibmmq
+    environment:
+      LICENSE: accept
+      MQ_QMGR_NAME: QM1
+      MQ_APP_PASSWORD: password
+      MQ_ADMIN_PASSWORD: adminpass
+    ports:
+      - "1414:1414"
+      - "9443:9443"
+
+  oracle:
+    image: gvenzl/oracle-free:23-slim
+    container_name: oracle
+    environment:
+      ORACLE_PASSWORD: oracle
+      APP_USER: appuser
+      APP_USER_PASSWORD: appuser
+    ports:
+      - "1521:1521"
