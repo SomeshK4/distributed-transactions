@@ -17,6 +17,8 @@ services:
   artemis:
     image: apache/activemq-artemis:latest
     container_name: artemis-xa
+    security_opt:
+      - seccomp:unconfined
     environment:
       ARTEMIS_USER: artemis
       ARTEMIS_PASSWORD: artemis
